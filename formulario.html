@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0d0d0d">
+    <link rel="icon" href="logo_1.jpeg" type="image/jpeg">
+    <title>AMB VIP | Reserva tu turno </title>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+   
+    <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; flex-direction: column; align-items: center; justify-content: center;">
+        <div class="spinner"></div>
+        <p style="color: white; font-family: 'Bebas Neue', sans-serif; margin-top: 15px; letter-spacing: 2px;">PROCESANDO TU TURNO EN AMB CREW...</p>
+    </div>
+
+    <div class="background-wrapper bg-index">
+        <div class="container">
+            <img src="logo_1.jpeg" alt="Logo AMB" class="logo">
+            <h1>RESERVA TU TURNO</h1>
+            <p style="margin-bottom: 20px;">Local exclusivo: AMB VIP</p>
+            
+            
+            <form id="turnoForm">
+                <input type="hidden" name="barbero" id="barberoInput" value="Seba">
+
+                <label for="nombre">Nombre y Apellido</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+
+                <label for="whatsapp">WhatsApp</label>
+                <input type="tel" id="whatsapp" name="whatsapp" 
+                       placeholder="Ej: 2644572844" 
+                       pattern="[0-9]{10,11}" 
+                       title="Ingresá 10 dígitos sin el 0 ni el 15" required>
+
+                <label for="servicio">Servicio</label>
+                <select id="servicio" required>
+                    <option value="" disabled selected>Elegí un servicio</option>
+                    <option value="Corte">Corte</option>
+                    <option value="Barba">Barba</option>
+                    <option value="Corte + Barba">Corte + Barba</option>
+                    <option value="Perfilado">Perfilado</option>
+                </select>
+
+                <label for="fecha">Seleccionar Día</label>
+                <input type="date" id="fecha" required>
+
+                <label for="hora">Seleccionar Horario</label>
+                <select id="hora" required>
+                    <option value="" disabled selected>Elegí un día primero</option>
+                </select>
+                
+                <button type="submit" id="btnReservar">CONFIRMAR RESERVA</button>
+            </form>
+
+            <footer style="margin-top: 25px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                <a href="https://www.instagram.com/amb_barbers_crew" target="_blank" class="btn-insta">
+                    <img src="instagram.png" alt="Instagram" class="insta-icon">
+                    SEGUINOS EN INSTAGRAM
+                </a>
+                <a href="index.html" class="btn-reserva">VOLVER AL INICIO</a>
+            </footer>
+        </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+    
+    <div id="modal-exito" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:#1a1a1a; padding:30px; border-radius:15px; border:2px solid #aeff00; text-align:center; width: 90%; max-width: 350px;">
+            <h2 style="color:#aeff00; font-family: 'Bebas Neue'; font-size: 2rem; margin-top:0;">¡TURNO AGENDADO!</h2>
+            <p style="color: #fff; margin: 15px 0;">Tu lugar está reservado. ¡Te esperamos!</p>
+            <button onclick="window.location.href='index.html'" style="width:100%; padding:15px; background:#aeff00; border:none; border-radius:8px; font-weight:bold; cursor:pointer; text-transform: uppercase;">LISTO</button>
+        </div>
+    </div>
+</body>
+</html>

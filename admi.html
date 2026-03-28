@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="logo_1.jpeg" type="image/jpeg">
+    <title>AMB VIP | Panel de Control</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="admin.css"> 
+</head>
+<body>
+    <div id="login-modal" class="login-overlay">
+        <div class="login-box">
+            <img src="logo_1.jpeg" alt="Logo AMB" class="logo-login">
+            <h2>ACCESO RESTRINGIDO</h2>
+            <input type="password" id="pass-input" placeholder="Ingresá la contraseña">
+            <p id="login-error" style="color: #ff3333; display: none; font-size: 14px; margin-bottom: 10px; font-family: sans-serif;">Contraseña incorrecta</p>
+            <button id="btn-login" class="btn-login-submit">ENTRAR AL PANEL</button>
+            <button onclick="window.location.href='index.html'" class="btn-login-back">VOLVER AL INICIO</button>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const password = "amb2026";
+            const loginModal = document.getElementById("login-modal");
+            const passInput = document.getElementById("pass-input");
+            const btnLogin = document.getElementById("btn-login");
+            const errorMsg = document.getElementById("login-error");
+
+            function checkPassword() {
+                if (passInput.value === password) {
+                    loginModal.style.opacity = "0";
+                    setTimeout(() => { loginModal.style.display = "none"; }, 300);
+                } else {
+                    errorMsg.style.display = "block";
+                    passInput.value = "";
+                    passInput.focus();
+                }
+            }
+            btnLogin.addEventListener("click", checkPassword);
+            passInput.addEventListener("keypress", (e) => { if (e.key === "Enter") checkPassword(); });
+        });
+    </script>
+    
+    <div class="background-wrapper bg-admin">
+        <div class="admin-container">
+            
+            <header class="header-panel">
+                <img src="logo_1.jpeg" alt="Logo AMB" class="logo-panel">
+                <div class="titulo-container">
+                    <h1>GESTIÓN DE TURNOS</h1>
+                    <p>Bienvenido, Seba</p>
+                </div>
+            </header>
+
+            <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px;">
+                <div class="stat-box">
+                    <p>Turnos Hoy</p>
+                    <h2 id="cantHoy">0</h2> </div>
+                <div class="stat-box">
+                    <p>Total Mensual</p>
+                    <h2 id="cantTotal">0</h2> </div>
+                <div class="stat-box" style="border-color: #aeff00;">
+                    <p style="color: #aeff00;">Caja Hoy (Est.)</p>
+                    <h2 id="cajaHoy" style="color: #aeff00;">$0</h2> </div>
+            </div>
+
+            <div class="bloqueo-container" style="background: #1a1a1a; padding: 20px; border-radius: 15px; margin-bottom: 25px; border: 1px solid #aeff00;">
+                <h3 style="color: #aeff00; margin: 0 0 15px 0; font-family: 'Bebas Neue'; letter-spacing: 1px;">BLOQUEAR AGENDA</h3>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <input type="date" id="fechaBloqueo" style="flex: 2; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #000; color: #fff;">
+                    <select id="horaInicio" style="flex: 1; padding: 12px; border-radius: 8px; background: #000; color: #fff; border: 1px solid #333;"><option value="" disabled selected>Desde</option></select>
+                    <select id="horaFin" style="flex: 1; padding: 12px; border-radius: 8px; background: #000; color: #fff; border: 1px solid #333;"><option value="" disabled selected>Hasta</option></select>
+                    <input type="hidden" id="barberoBloqueo" value="Seba">
+                    <button id="btnBloquear" style="background: #aeff00; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; color: #000; font-family: 'Bebas Neue'; letter-spacing: 1px;">BLOQUEAR RANGO</button>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Cliente</th>
+                            <th>WhatsApp</th>
+                            <th>Servicio</th>
+                            <th>Precio</th> <th>Gestión</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-turnos"> 
+                        </tbody>
+                </table>
+            </div>
+
+        </div> 
+    </div> 
+
+    <script type="module" src="admin.js"></script>
+
+    <div id="modal-bloqueo" class="login-overlay" style="display: none; opacity: 1;">
+        <div class="login-box" style="border-color: #aeff00;">
+            <i class="fas fa-calendar-check" style="color: #aeff00; font-size: 3rem; margin-bottom: 15px;"></i>
+            <h2 style="margin-bottom: 10px;">¡AGENDA BLOQUEADA!</h2>
+            <p style="color: #ccc; margin-bottom: 20px;">Los horarios seleccionados ya no estarán disponibles para los clientes.</p>
+            <button onclick="document.getElementById('modal-bloqueo').style.display='none'" class="btn-login-submit">ENTENDIDO</button>
+        </div>
+    </div>
+</body>
+</html>

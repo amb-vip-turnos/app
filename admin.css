@@ -1,0 +1,315 @@
+/* --- RESET GENERAL Y FUENTES --- */
+body, html { 
+    margin: 0; 
+    padding: 0; 
+    min-height: 100%; 
+    font-family: 'Roboto Condensed', sans-serif; 
+    background-color: #0d0d0d; 
+}
+
+/* --- FONDO DEL PANEL --- */
+.bg-admin {
+    background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('fondo_eleg.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* --- CONTENEDOR PRINCIPAL --- */
+.admin-container {
+    max-width: 1200px;
+    width: 100%;
+    background: rgba(10, 10, 10, 0.95);
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid #444;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    box-sizing: border-box;
+}
+
+/* --- HEADER Y TÍTULOS --- */
+.header-panel { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 20px; 
+    margin-bottom: 20px; 
+}
+.logo-panel { 
+    width: 80px; 
+    height: 80px; 
+    border-radius: 50%; 
+    object-fit: cover; 
+}
+.titulo-container h1 { 
+    margin: 0; 
+    font-size: 2.5rem; 
+    font-family: 'Bebas Neue', sans-serif; 
+    color: #fff; 
+    letter-spacing: 2px; 
+}
+.titulo-container p { 
+    margin: 0; 
+    color: #888; 
+    text-align: center; 
+}
+
+/* --- ESTADÍSTICAS --- */
+.stats-grid { 
+    display: flex; 
+    justify-content: center; 
+    gap: 20px; 
+    margin-bottom: 30px; 
+    flex-wrap: wrap;
+}
+.stat-box { 
+    background: #1a1a1a; 
+    padding: 15px; 
+    border-radius: 10px; 
+    border: 1px solid #aeff00; 
+    text-align: center; 
+    width: 120px; 
+}
+.stat-box p { 
+    font-size: 0.7rem; 
+    color: #aaa; 
+    margin: 0; 
+}
+.stat-box h2 { 
+    color: #aeff00; 
+    margin: 5px 0; 
+    font-family: 'Bebas Neue', sans-serif; 
+    font-size: 2rem;
+}
+
+/* --- TABLA DE TURNOS --- */
+.table-responsive { 
+    width: 100%; 
+    overflow-x: auto; 
+}
+table { 
+    width: 100%; 
+    min-width: 800px; 
+    border-collapse: collapse; 
+    color: #fff; 
+}
+th { 
+    font-family: 'Bebas Neue', sans-serif; 
+    background: #1a1a1a; 
+    padding: 15px; 
+    border-bottom: 2px solid #444; 
+    text-align: left; 
+    text-transform: uppercase; 
+    letter-spacing: 1px;
+}
+td { 
+    padding: 15px; 
+    border-bottom: 1px solid #222; 
+}
+tr:hover { background: rgba(255, 255, 255, 0.05); }
+
+.fila-completada { 
+    background-color: rgba(37, 211, 102, 0.1) !important; 
+}
+.fila-completada td { 
+    color: #888; 
+}
+
+/* --- LOGIN OVERLAY --- */
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #0d0d0d; 
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.3s ease; 
+    backdrop-filter: blur(5px);
+}
+.login-box {
+    background: #1a1a1a;
+    padding: 40px;
+    border-radius: 20px;
+    border: 2px solid #aeff00;
+    text-align: center;
+    width: 90%;
+    max-width: 350px;
+    box-shadow: 0 0 30px rgba(174, 255, 0, 0.2);
+    box-sizing: border-box;
+}
+.logo-login {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    border: 2px solid #aeff00;
+    object-fit: cover;
+}
+.login-box h2 {
+    color: #fff;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    font-family: 'Bebas Neue', sans-serif;
+}
+.login-box input {
+    width: 100%;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 18px;
+    letter-spacing: 2px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background: #000;
+    color: #fff;
+    box-sizing: border-box;
+}
+.btn-login-submit {
+    background: #aeff00;
+    color: #000;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: 'Roboto Condensed', sans-serif;
+}
+.btn-login-submit:hover {
+    background: #d4ff70;
+    transform: scale(1.02);
+}
+.btn-login-back {
+    background: transparent;
+    color: #888;
+    border: 1px solid #444;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Roboto Condensed', sans-serif;
+}
+.btn-login-back:hover {
+    background: #333;
+    color: #fff;
+}
+
+/* =========================================
+   DISEÑO DE BOTONES (ESCRITORIO Y CELULAR)
+   ========================================= */
+
+/* ESTILO BASE DE BOTONES (PARA PC) */
+.botones-gestion-mobile {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-start;
+    align-items: center;
+}
+.btn-accion-mobile {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: 0.3s;
+    text-decoration: none;
+}
+.btn-accion-mobile span {
+    display: none; 
+}
+.btn-accion-mobile:hover {
+    transform: scale(1.2);
+}
+.btn-confirmar-mobile { color: #00d4ff; }
+.btn-recordar-mobile { color: #ffb700; }
+.btn-check-mobile { color: #aeff00; }
+.btn-delete-mobile { color: #ff4444; }
+.estado-completado { color: #aeff00; font-weight: bold; }
+
+/* DISEÑO RESPONSIVO (PARA CELULARES) */
+@media (max-width: 768px) {
+    .table-responsive table { display: block; width: 100%; }
+    .table-responsive thead { display: none; }
+    
+    .table-responsive tr {
+        display: block;
+        border: 1px solid rgba(174, 255, 0, 0.2);
+        border-radius: 10px;
+        margin-bottom: 15px;
+        padding: 15px;
+        background: rgba(26, 26, 26, 0.9);
+    }
+    
+    .table-responsive td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: none;
+        padding: 8px 0;
+        text-align: right;
+    }
+    
+    .table-responsive td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #888;
+        font-size: 0.9rem;
+    }
+    
+    .acciones-celda {
+        display: block;
+        width: 100%;
+        padding-top: 15px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin-top: 10px;
+    }
+    
+    .acciones-celda::before { display: none; }
+    
+    .botones-gestion-mobile {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        width: 100%;
+    }
+    
+    .btn-accion-mobile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px;
+        border-radius: 8px;
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+        color: #000; 
+    }
+    
+    .btn-accion-mobile span {
+        display: inline; 
+    }
+    
+    .btn-confirmar-mobile { background-color: #00d4ff; }
+    .btn-recordar-mobile { background-color: #ffb700; }
+    .btn-check-mobile { background-color: #aeff00; grid-column: span 2; width: 100%; }
+    .btn-delete-mobile { background-color: #ff4444; color: #fff; grid-column: span 2; }
+    
+    .estado-completado {
+        display: block;
+        text-align: center;
+        width: 100%;
+        padding: 10px;
+        grid-column: span 2;
+    }
+}

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0d0d0d">
+    <link rel="icon" href="logo_1.jpeg" type="image/jpeg">
+    <title>AMB VIP | Inicio</title>
+    <link rel="stylesheet" href="Style_1.css">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <img src="logo_1.jpeg" id="logo-principal" alt="Logo">
+        
+        <h1>AMB VIP</h1>
+        <a href="formulario.html" id="boton-reserva" class="btn-reserva">RESERVÁ TU TURNO</a>
+    </header>
+
+    <section id="lookbook">
+        <h2>BIENVENIDOS A LA CASA DEL FLOW</h2>
+        <div class="grid-galeria">
+            <div class="card-foto"><img src="foto1.jpeg" alt="Corte 1"></div>
+            <div class="card-foto"><img src="foto2.jpeg" alt="Corte 2"></div>
+            <div class="card-foto"><img src="foto3.jpeg" alt="Corte 3"></div>
+            <div class="card-foto"><img src="foto4.jpeg" alt="Corte 4"></div>
+            <div class="card-foto"><img src="foto5.jpeg" alt="Corte 5"></div>
+            <div class="card-foto"><img src="foto6.jpeg" alt="Corte 6"></div>
+        </div>
+    </section>
+
+    <section id="servicios">
+        <h2>NUESTROS SERVICIOS</h2>
+        <div class="lista-precios">
+            <div class="item-precio">
+                <span class="servicio">Corte Moderno (Barba/Cejas)</span>
+                <span class="puntos"></span>
+                <span class="precio">$12.000</span>
+            </div>
+            <div class="item-precio">
+                <span class="servicio">Corte Moderno (Lavado De Cabeza / Nutrición)</span>
+                <span class="puntos"></span>
+                <span class="precio">$13.000</span>
+            </div>
+            <div class="item-precio">
+                <span class="servicio">Corte Moderno (Lavado De Cabeza / Mascarilla)</span>
+                <span class="puntos"></span>
+                <span class="precio">$15.000</span>
+            </div>
+            <div class="item-precio">
+                <span class="servicio">Color Moderno (Claritos / Mechas)</span>
+                <span class="puntos"></span>
+                <span class="precio">$35.000</span>
+            </div>
+            <div class="item-precio">
+                <span class="servicio">Color Global</span>
+                <span class="puntos"></span>
+                <span class="precio">$50.000</span>
+            </div>
+            <div class="item-precio">
+                <span class="servicio">Permanente / Ondulación</span>
+                <span class="puntos"></span>
+                <span class="precio">$45.000</span>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <h3>UBICACIÓN</h3>
+            <p>Calle 9 de julio, Entre Calle Mitre y Av. Ramon Barrera</p>
+            <p>Santa Rosa - 25 de mayo, San Juan</p>
+            <p>Horarios de atencion: Lunes a Sabado 09:00 - 21:00 hs</p>
+            
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1167.2320628556251!2d-68.31467942738881!3d-31.74550204469777!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x968105f3e733da51%3A0xf9f2771a31c8fe1!2sAMB%20BARBER%20CREW!5e0!3m2!1ses-419!2sar!4v1773556820463!5m2!1ses-419!2sar" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+    
+            <div class="footer-links">
+                <a href="https://instagram.com/amb_barbers_crew" target="_blank">
+                    <img src="instagram.png" alt="Instagram" class="icon">
+                </a>
+                <a href="https://wa.me/5491100000000" target="_blank">
+                    <img src="whatsapp.png" alt="WhatsApp" class="icon">
+                </a>
+            </div>
+            
+            <p style="margin-top: 30px; font-size: 0.8rem; color: #666;">© 2026 AMB VIP</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Lógica del logo secreto
+            const logo = document.getElementById('logo-principal');
+            if (logo) {
+                logo.addEventListener('dblclick', () => {
+                    window.location.href = "admi.html";
+                });
+            }
+
+            // Lógica del botón de reserva (si el href del HTML no te basta)
+            const btnReserva = document.getElementById('boton-reserva');
+            if (btnReserva) {
+                btnReserva.addEventListener('click', (e) => {
+                    // Si quieres que haga algo especial antes de ir al formulario
+                    console.log("Redirigiendo a formulario...");
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+</body>
+</html>
