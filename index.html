@@ -3,9 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="AMB VIP - Turnos Online" />
+    <meta property="og:description" content="Reservá tu turno rápido y fácil en la mejor barbería." />
+    <meta property="og:image" content="https://amb-vip.github.io/amb-vip-turnos/logo_1.jpeg" />
+    <meta property="og:url" content="https://amb-vip.github.io/amb-vip-turnos/" />
+    <meta property="og:type" content="website" />
     <meta name="theme-color" content="#0d0d0d">
     <link rel="icon" href="logo_1.jpeg" type="image/jpeg">
-    <title>AMB VIP | Inicio</title>
+    <title>AMB VIP - Turnos Online</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    
     <link rel="stylesheet" href="style_1.css">
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
 </head>
@@ -20,13 +28,17 @@
 
     <section id="lookbook">
         <h2>BIENVENIDOS A LA CASA DEL FLOW</h2>
-        <div class="grid-galeria">
-            <div class="card-foto"><img src="foto1.jpeg" alt="Corte 1"></div>
-            <div class="card-foto"><img src="foto2.jpeg" alt="Corte 2"></div>
-            <div class="card-foto"><img src="foto3.jpeg" alt="Corte 3"></div>
-            <div class="card-foto"><img src="foto4.jpeg" alt="Corte 4"></div>
-            <div class="card-foto"><img src="foto5.jpeg" alt="Corte 5"></div>
-            <div class="card-foto"><img src="foto6.jpeg" alt="Corte 6"></div>
+        
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"><img src="foto1.jpeg" alt="Corte 1"></div>
+                <div class="swiper-slide"><img src="foto2.jpeg" alt="Corte 2"></div>
+                <div class="swiper-slide"><img src="foto3.jpeg" alt="Corte 3"></div>
+                <div class="swiper-slide"><img src="foto4.jpeg" alt="Corte 4"></div>
+                <div class="swiper-slide"><img src="foto5.jpeg" alt="Corte 5"></div>
+                <div class="swiper-slide"><img src="foto6.jpeg" alt="Corte 6"></div>
+            </div>
+            <div class="swiper-pagination"></div>
         </div>
     </section>
 
@@ -90,7 +102,29 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
     <script>
+        // Inicializar Swiper
+        var swiper = new Swiper(".mySwiper", {
+            loop: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            breakpoints: {
+                320: { // Celulares
+                    slidesPerView: 1,
+                    spaceBetween: 10
+                },
+                768: { // Tablets y PC
+                    slidesPerView: 3,
+                    spaceBetween: 20
+                }
+            }
+        });
+
+        // Tus scripts originales
         document.addEventListener('DOMContentLoaded', () => {
             
             // Lógica del logo secreto
@@ -101,17 +135,14 @@
                 });
             }
 
-            // Lógica del botón de reserva (si el href del HTML no te basta)
+            // Lógica del botón de reserva
             const btnReserva = document.getElementById('boton-reserva');
             if (btnReserva) {
                 btnReserva.addEventListener('click', (e) => {
-                    // Si quieres que haga algo especial antes de ir al formulario
                     console.log("Redirigiendo a formulario...");
                 });
             }
         });
     </script>
-</body>
-</html>
 </body>
 </html>

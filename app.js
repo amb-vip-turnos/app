@@ -15,8 +15,8 @@ const SERVICIOS_SEBA = [
     { nombre: "Corte Moderno (Lavado/Nutrición)", precio: "$13.000", disponible: true },
     { nombre: "Corte Moderno (Lavado/Mascarilla)", precio: "$15.000", disponible: true },
     { nombre: "Color Moderno (Claritos/Mechas)", precio: "$35.000", disponible: true },
-    { nombre: "Color Global", precio: "$50.000", disponible: false },
-    { nombre: "Permanente / Ondulación", precio: "$45.000", disponible: false }
+    { nombre: "Color Global", precio: "$50.000", disponible: true },
+    { nombre: "Permanente / Ondulación", precio: "$45.000", disponible: true }
 ];
 
 const hoy = new Date();

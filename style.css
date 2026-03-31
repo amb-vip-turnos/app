@@ -6,7 +6,6 @@ body, html {
     background-color: #000;
 }
 
-/* --- FONDOS --- */
 .background-wrapper {
     min-height: 100vh;
     display: flex;
@@ -17,7 +16,7 @@ body, html {
 }
 
 .bg-index {
-    /* El logo se nota mucho más (0.4 de oscuridad) */
+    
     background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
                 url('logo_portada.jpeg');
     background-size: cover;
