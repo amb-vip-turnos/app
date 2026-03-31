@@ -1,6 +1,11 @@
 import { db } from './firebase-config.js';
 import { collection, onSnapshot, deleteDoc, doc, updateDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+// --- MEJORA DE SONIDO ---
+const sonidoTurno = new Audio('notificacion.mp3');
+let primeraCarga = true; 
+// ------------------------
+
 document.addEventListener('DOMContentLoaded', () => {
     
     const tablaBody = document.getElementById('tabla-turnos');
@@ -13,12 +18,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const horaFin = document.getElementById('horaFin');
     
     if (horaInicio && horaFin) {
+        // Genera horarios de 09:00 a 20:30
         for (let h = 9; h <= 20; h++) {
             for (let m = 0; m < 60; m += 30) {
-                if (h === 20 && m > 30) break;
+                // Si llegamos a las 20:30, el bucle se detiene después de esta vuelta
                 let hora = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
                 horaInicio.innerHTML += `<option value="${hora}">${hora}</option>`;
                 horaFin.innerHTML += `<option value="${hora}">${hora}</option>`;
+                
+                // Corta el bucle en 20:30 para que no pase a las 21:00
+                if (h === 20 && m === 30) break;
             }
         }
     }
@@ -66,6 +75,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     onSnapshot(collection(db, "turnos"), (snapshot) => {
+        // --- LÓGICA DE NOTIFICACIÓN ---
+        if (!primeraCarga && snapshot.docChanges().some(change => change.type === "added")) {
+            sonidoTurno.play().catch(e => console.log("Hacé clic en la web para habilitar audio"));
+        }
+        primeraCarga = false; 
+        // ------------------------------
+
         tablaBody.innerHTML = '';
         let turnosHoy = 0; 
         let cuentaSeba = 0; 
@@ -122,7 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
             tablaBody.appendChild(fila);
         });
         
-        // RED DE SEGURIDAD PARA LOS IDs DEL DOM: Busca el ID nuevo o el viejo, así no falla nunca.
         const domCuentaHoy = document.getElementById('cantHoy') || document.getElementById('cuenta-hoy');
         const domCuentaSeba = document.getElementById('cantTotal') || document.getElementById('contador-seba');
         const domCajaHoy = document.getElementById('cajaHoy');
