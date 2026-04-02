@@ -209,6 +209,38 @@ tr:hover { background: rgba(255, 255, 255, 0.05); }
    DISEÑO DE BOTONES (ESCRITORIO Y CELULAR)
    ========================================= */
 
+/* >>> INICIO CAMBIO: ESTILOS BOTONES FILTRO <<< */
+.filtros-contenedor {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+.btn-filtro {
+    background: #1a1a1a;
+    color: #fff;
+    border: 1px solid #444;
+    padding: 12px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.btn-filtro.activo {
+    background: #aeff00;
+    color: #000;
+    border-color: #aeff00;
+}
+.btn-filtro:hover {
+    transform: scale(1.05);
+}
+/* >>> FIN CAMBIO <<< */
+
 /* ESTILO BASE DE BOTONES (PARA PC) */
 .botones-gestion-mobile {
     display: flex;

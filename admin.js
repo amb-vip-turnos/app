@@ -1,13 +1,40 @@
 import { db } from './firebase-config.js';
-import { collection, onSnapshot, deleteDoc, doc, updateDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
+import { collection, onSnapshot, deleteDoc, doc, updateDoc, addDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 // --- MEJORA DE SONIDO ---
 const sonidoTurno = new Audio('notificacion.mp3');
 let primeraCarga = true; 
 // ------------------------
 
+// >>> INICIO CAMBIO: LÓGICA DE FILTRADO SIN RECARGA <<<
+window.filtrarVista = (tipo) => {
+    // Cambia el color de los botones
+    document.getElementById('btn-ver-turnos').classList.toggle('activo', tipo === 'turnos');
+    document.getElementById('btn-ver-bloqueos').classList.toggle('activo', tipo === 'bloqueos');
+
+    // Filtra las filas de la tabla al instante
+    const filas = document.querySelectorAll('#tabla-turnos tr');
+    filas.forEach(fila => {
+        const esBloqueado = fila.getAttribute('data-estado') === 'bloqueado';
+        if (tipo === 'turnos') {
+            fila.style.display = esBloqueado ? 'none' : '';
+        } else { // Si elige ver bloqueos
+            fila.style.display = esBloqueado ? '' : 'none';
+        }
+    });
+};
+// >>> FIN CAMBIO <<<
+
 document.addEventListener('DOMContentLoaded', () => {
     
+    // >>> INICIO CAMBIO: PARCHE IPHONE AUDIO <<<
+    document.body.addEventListener('click', () => {
+        sonidoTurno.play().then(() => {
+            sonidoTurno.pause();
+            sonidoTurno.currentTime = 0;
+        }).catch(e => console.log("Audio preparado para iPhone"));
+    }, { once: true });
+    // >>> FIN CAMBIO <<<
+
     const tablaBody = document.getElementById('tabla-turnos');
     if (!tablaBody) return;
 
@@ -18,15 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const horaFin = document.getElementById('horaFin');
     
     if (horaInicio && horaFin) {
-        // Genera horarios de 09:00 a 20:30
         for (let h = 9; h <= 20; h++) {
             for (let m = 0; m < 60; m += 30) {
-                // Si llegamos a las 20:30, el bucle se detiene después de esta vuelta
                 let hora = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
                 horaInicio.innerHTML += `<option value="${hora}">${hora}</option>`;
                 horaFin.innerHTML += `<option value="${hora}">${hora}</option>`;
-                
-                // Corta el bucle en 20:30 para que no pase a las 21:00
                 if (h === 20 && m === 30) break;
             }
         }
@@ -74,19 +97,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    onSnapshot(collection(db, "turnos"), (snapshot) => {
-        // --- LÓGICA DE NOTIFICACIÓN ---
-        if (!primeraCarga && snapshot.docChanges().some(change => change.type === "added")) {
-            sonidoTurno.play().catch(e => console.log("Hacé clic en la web para habilitar audio"));
-        }
-        primeraCarga = false; 
-        // ------------------------------
+    // Creamos una consulta ordenada por fecha y luego por hora
+const q = query(collection(db, "turnos"), orderBy("fecha", "asc"), orderBy("hora", "asc"));
 
-        tablaBody.innerHTML = '';
+onSnapshot(q, (snapshot) => {
+    // --- El resto de tu lógica de notificación y sonido se mantiene igual ---
+    if (!primeraCarga && snapshot.docChanges().some(change => change.type === "added")) {
+        sonidoTurno.play().catch(e => console.log("Error de audio"));
+    }
+    primeraCarga = false; 
+
+    tablaBody.innerHTML = '';
+    // ... todo el resto de tu código de renderizado de filas sigue igual ...
         let turnosHoy = 0; 
         let cuentaSeba = 0; 
         let recaudacionHoy = 0;
         
+        // >>> INICIO CAMBIO: REVISAR ESTADO ACTUAL DEL BOTON FILTRO <<<
+        const verTurnosActivo = document.getElementById('btn-ver-turnos')?.classList.contains('activo') !== false; // Por defecto true
+        // >>> FIN CAMBIO <<<
+
         snapshot.forEach((turnoDoc) => {
             const turno = turnoDoc.data();
             const id = turnoDoc.id;
@@ -107,7 +137,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const msjRecordar = `¡Buen día ${turno.nombre}! Te recordamos tu turno de *HOY* en *AMB VIP* a las ${turno.hora} hs. ¡Nos vemos! 💈`;
 
             const fila = document.createElement('tr');
+            
+            // >>> INICIO CAMBIO: ASIGNAMOS DATA-ESTADO PARA EL FILTRO <<<
+            fila.setAttribute('data-estado', turno.estado);
             if (turno.estado === 'completado') fila.classList.add('fila-completada');
+            
+            // Ocultamos la fila inicialmente si no coincide con el filtro activo
+            if (verTurnosActivo && turno.estado === 'bloqueado') fila.style.display = 'none';
+            if (!verTurnosActivo && turno.estado !== 'bloqueado') fila.style.display = 'none';
+            // >>> FIN CAMBIO <<<
             
             fila.innerHTML = `
                 <td data-label="Fecha">${turno.fecha}</td>
