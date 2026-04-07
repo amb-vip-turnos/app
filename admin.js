@@ -1,39 +1,50 @@
 import { db } from './firebase-config.js';
 import { collection, onSnapshot, deleteDoc, doc, updateDoc, addDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
 // --- MEJORA DE SONIDO ---
 const sonidoTurno = new Audio('notificacion.mp3');
 let primeraCarga = true; 
 // ------------------------
 
-// >>> INICIO CAMBIO: LÓGICA DE FILTRADO SIN RECARGA <<<
+// >>> LÓGICA DE FILTRADO CON HISTORIAL (Mantenida intacta) <<<
 window.filtrarVista = (tipo) => {
-    // Cambia el color de los botones
     document.getElementById('btn-ver-turnos').classList.toggle('activo', tipo === 'turnos');
     document.getElementById('btn-ver-bloqueos').classList.toggle('activo', tipo === 'bloqueos');
+    
+    const btnHistorial = document.getElementById('btn-ver-historial');
+    if (btnHistorial) btnHistorial.classList.toggle('activo', tipo === 'historial');
 
-    // Filtra las filas de la tabla al instante
+    const hoyStr = new Date().toISOString().split('T')[0];
     const filas = document.querySelectorAll('#tabla-turnos tr');
+
     filas.forEach(fila => {
-        const esBloqueado = fila.getAttribute('data-estado') === 'bloqueado';
+        const estado = fila.getAttribute('data-estado');
+        const fecha = fila.getAttribute('data-fecha');
+        const esBloqueado = estado === 'bloqueado';
+        const esCompletado = estado === 'completado';
+        const esPasado = fecha < hoyStr;
+
+        fila.style.display = 'none';
+
         if (tipo === 'turnos') {
-            fila.style.display = esBloqueado ? 'none' : '';
-        } else { // Si elige ver bloqueos
-            fila.style.display = esBloqueado ? '' : 'none';
+            if (!esBloqueado && !esCompletado && !esPasado) fila.style.display = '';
+        } else if (tipo === 'bloqueos') {
+            if (esBloqueado && !esPasado) fila.style.display = '';
+        } else if (tipo === 'historial') {
+            if ((esPasado || esCompletado) && !esBloqueado) fila.style.display = '';
         }
     });
 };
-// >>> FIN CAMBIO <<<
 
 document.addEventListener('DOMContentLoaded', () => {
     
-    // >>> INICIO CAMBIO: PARCHE IPHONE AUDIO <<<
+    // PARCHE IPHONE AUDIO (Mantenido intacto)
     document.body.addEventListener('click', () => {
         sonidoTurno.play().then(() => {
             sonidoTurno.pause();
             sonidoTurno.currentTime = 0;
         }).catch(e => console.log("Audio preparado para iPhone"));
     }, { once: true });
-    // >>> FIN CAMBIO <<<
 
     const tablaBody = document.getElementById('tabla-turnos');
     if (!tablaBody) return;
@@ -44,14 +55,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const horaInicio = document.getElementById('horaInicio');
     const horaFin = document.getElementById('horaFin');
     
+    // >>> AJUSTE 1: Selectores de bloqueo ahora de 1 en 1 hora (9 a 21) <<<
     if (horaInicio && horaFin) {
-        for (let h = 9; h <= 20; h++) {
-            for (let m = 0; m < 60; m += 30) {
-                let hora = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
-                horaInicio.innerHTML += `<option value="${hora}">${hora}</option>`;
-                horaFin.innerHTML += `<option value="${hora}">${hora}</option>`;
-                if (h === 20 && m === 30) break;
-            }
+        horaInicio.innerHTML = '<option value="" disabled selected>Desde</option>';
+        horaFin.innerHTML = '<option value="" disabled selected>Hasta</option>';
+        for (let h = 9; h <= 21; h++) {
+            let hora = `${h.toString().padStart(2, '0')}:00`;
+            horaInicio.innerHTML += `<option value="${hora}">${hora}</option>`;
+            horaFin.innerHTML += `<option value="${hora}">${hora}</option>`;
         }
     }
 
@@ -74,7 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 const promesas = [];
-                for (let t = inicioMin; t <= finMin; t += 30) {
+                // >>> AJUSTE 2: Grabado de bloqueos ahora salta cada 60 minutos (t += 60) <<<
+                for (let t = inicioMin; t <= finMin; t += 60) {
                     let h = Math.floor(t / 60).toString().padStart(2, '0');
                     let m = (t % 60).toString().padStart(2, '0');
                     
@@ -97,27 +109,36 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Creamos una consulta ordenada por fecha y luego por hora
-const q = query(collection(db, "turnos"), orderBy("fecha", "asc"), orderBy("hora", "asc"));
+    // CONSULTA REALTIME
+    const q = query(collection(db, "turnos"), orderBy("fecha", "asc"), orderBy("hora", "asc"));
 
-onSnapshot(q, (snapshot) => {
-    // --- El resto de tu lógica de notificación y sonido se mantiene igual ---
-    if (!primeraCarga && snapshot.docChanges().some(change => change.type === "added")) {
-        sonidoTurno.play().catch(e => console.log("Error de audio"));
-    }
-    primeraCarga = false; 
+    onSnapshot(q, (snapshot) => {
+        if (!primeraCarga && snapshot.docChanges().some(change => change.type === "added")) {
+            sonidoTurno.play().catch(e => console.log("Error de audio"));
+        }
+        primeraCarga = false; 
 
-    tablaBody.innerHTML = '';
-    // ... todo el resto de tu código de renderizado de filas sigue igual ...
+        tablaBody.innerHTML = '';
         let turnosHoy = 0; 
         let cuentaSeba = 0; 
         let recaudacionHoy = 0;
         
-        // >>> INICIO CAMBIO: REVISAR ESTADO ACTUAL DEL BOTON FILTRO <<<
-        const verTurnosActivo = document.getElementById('btn-ver-turnos')?.classList.contains('activo') !== false; // Por defecto true
-        // >>> FIN CAMBIO <<<
+        let vistaActiva = 'turnos';
+        if (document.getElementById('btn-ver-bloqueos')?.classList.contains('activo')) vistaActiva = 'bloqueos';
+        if (document.getElementById('btn-ver-historial')?.classList.contains('activo')) vistaActiva = 'historial';
 
-        snapshot.forEach((turnoDoc) => {
+        // >>> NUEVO: ORDENAMIENTO FORZADO EN EL FRONT-END <<<
+        const docsOrdenados = snapshot.docs.sort((a, b) => {
+            const dataA = a.data();
+            const dataB = b.data();
+            // Creamos un string único como "2024-04-07 09:00" para comparar
+            const fullA = `${dataA.fecha} ${dataA.hora}`;
+            const fullB = `${dataB.fecha} ${dataB.hora}`;
+            return fullA.localeCompare(fullB);
+        });
+
+        // Iteramos sobre el array ya ordenado en lugar de snapshot directo
+        docsOrdenados.forEach((turnoDoc) => {
             const turno = turnoDoc.data();
             const id = turnoDoc.id;
 
@@ -137,15 +158,19 @@ onSnapshot(q, (snapshot) => {
             const msjRecordar = `¡Buen día ${turno.nombre}! Te recordamos tu turno de *HOY* en *AMB VIP* a las ${turno.hora} hs. ¡Nos vemos! 💈`;
 
             const fila = document.createElement('tr');
+            const esPasado = turno.fecha < fechaHoy;
+            const esCompletado = turno.estado === 'completado';
+            const esBloqueado = turno.estado === 'bloqueado';
+
+            fila.setAttribute('data-estado', turno.estado || 'pendiente');
+            fila.setAttribute('data-fecha', turno.fecha);
             
-            // >>> INICIO CAMBIO: ASIGNAMOS DATA-ESTADO PARA EL FILTRO <<<
-            fila.setAttribute('data-estado', turno.estado);
-            if (turno.estado === 'completado') fila.classList.add('fila-completada');
+            if (esCompletado) fila.classList.add('fila-completada');
             
-            // Ocultamos la fila inicialmente si no coincide con el filtro activo
-            if (verTurnosActivo && turno.estado === 'bloqueado') fila.style.display = 'none';
-            if (!verTurnosActivo && turno.estado !== 'bloqueado') fila.style.display = 'none';
-            // >>> FIN CAMBIO <<<
+            fila.style.display = 'none';
+            if (vistaActiva === 'turnos' && !esBloqueado && !esCompletado && !esPasado) fila.style.display = '';
+            else if (vistaActiva === 'bloqueos' && esBloqueado && !esPasado) fila.style.display = '';
+            else if (vistaActiva === 'historial' && (esPasado || esCompletado) && !esBloqueado) fila.style.display = '';
             
             fila.innerHTML = `
                 <td data-label="Fecha">${turno.fecha}</td>
@@ -176,8 +201,8 @@ onSnapshot(q, (snapshot) => {
             tablaBody.appendChild(fila);
         });
         
-        const domCuentaHoy = document.getElementById('cantHoy') || document.getElementById('cuenta-hoy');
-        const domCuentaSeba = document.getElementById('cantTotal') || document.getElementById('contador-seba');
+        const domCuentaHoy = document.getElementById('cantHoy');
+        const domCuentaSeba = document.getElementById('cantTotal');
         const domCajaHoy = document.getElementById('cajaHoy');
 
         if (domCuentaHoy) domCuentaHoy.innerText = turnosHoy;
@@ -185,6 +210,7 @@ onSnapshot(q, (snapshot) => {
         if (domCajaHoy) domCajaHoy.innerText = `$${recaudacionHoy.toLocaleString('es-AR')}`;
     });
 
+    // EVENTOS DE CLICK (Mantenidos intactos)
     tablaBody.addEventListener('click', async (e) => {
         const target = e.target.closest('button');
         if (!target) return;

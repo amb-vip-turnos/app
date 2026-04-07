@@ -8,7 +8,8 @@ const horaSelect = document.getElementById('hora');
 const servicioSelect = document.getElementById('servicio');
 const barberoInput = document.getElementById('barberoInput');
 
-const CONFIG = { apertura: 9, cierre: 21, intervalo: 30 };
+// >>> CAMBIO: Intervalo actualizado a 60 minutos (1 hora) <<<
+const CONFIG = { apertura: 9, cierre: 21, intervalo: 60 };
 
 const SERVICIOS_SEBA = [
     { nombre: "Corte Moderno (Barba/Cejas)", precio: "$12.000", disponible: true },
@@ -27,25 +28,17 @@ const fechaHoyStr = `${anio}-${mes}-${dia}`;
 fechaInput.min = fechaHoyStr;
 
 function inicializarServicios() {
-    // 1. Limpiamos el select y dejamos la opción por defecto
     servicioSelect.innerHTML = '<option value="" disabled selected>Elegí un servicio</option>';
-    
-    // 2. Recorremos TODOS los servicios (sin filtrar)
     SERVICIOS_SEBA.forEach(servicio => {
         let opt = document.createElement('option');
         opt.value = servicio.nombre;
-        
-        // 3. Si el servicio está disponible, lo mostramos normal
         if (servicio.disponible) {
             opt.textContent = `${servicio.nombre} — ${servicio.precio}`;
-        } 
-        // 4. Si NO está disponible, le cambiamos el texto y lo desactivamos
-        else {
+        } else {
             opt.textContent = `${servicio.nombre} — (No disponible)`;
-            opt.disabled = true; // Esto hace que se vea gris y no se pueda clickear
-            opt.style.color = "#888"; // Refuerzo visual en gris para navegadores compatibles
+            opt.disabled = true;
+            opt.style.color = "#888";
         }
-        
         servicioSelect.appendChild(opt);
     });
 }
@@ -83,12 +76,15 @@ async function cargarHorariosDisponibles() {
 
         let horariosDisponibles = 0;
 
-        for (let h = CONFIG.apertura; h < CONFIG.cierre; h++) {
+        // >>> CAMBIO: Generación de horarios cada 1 hora <<<
+        for (let h = CONFIG.apertura; h <= CONFIG.cierre; h++) {
+            // Solo generamos los minutos que coincidan con el intervalo (en este caso 00)
             for (let m = 0; m < 60; m += CONFIG.intervalo) {
                 let slot = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
                 
                 let yaPaso = false;
                 if (esHoy) {
+                    // Si es hoy, comparamos con la hora actual para no dar turnos viejos
                     if (h < horaActual || (h === horaActual && m <= minutoActual)) {
                         yaPaso = true;
                     }
