@@ -14,7 +14,7 @@ const CONFIG = { apertura: 9, cierre: 21, intervalo: 60 };
 const SERVICIOS_SEBA = [
     { nombre: "Corte Moderno (Barba/Cejas)", precio: "$12.000", disponible: true },
     { nombre: "Corte Moderno (Lavado/Nutrición)", precio: "$13.000", disponible: false },
-    { nombre: "Corte Moderno (Lavado/Mascarilla)", precio: "$15.000", disponible: true },
+    { nombre: "Corte Moderno (Mascarilla)", precio: "$15.000", disponible: true },
     { nombre: "Color Moderno (Claritos/Mechas)", precio: "$35.000", disponible: false },
     { nombre: "Color Global", precio: "$50.000", disponible: false },
     { nombre: "Permanente / Ondulación", precio: "$45.000", disponible: false }
